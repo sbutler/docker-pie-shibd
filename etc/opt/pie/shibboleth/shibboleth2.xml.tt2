@@ -4,7 +4,7 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
-  <TCPListener address="[% shibd_address %]" port="1600" />
+  <TCPListener address="[% shibd_address %]" port="1600" acl="0.0.0.0/0"/>
 
 	<!--
 	     Put your SP's unique entity ID in the below entityID attribute
