@@ -8,9 +8,12 @@ if [[ "$1" == "shibd-pie" ]]; then
     SHIBD_ADDRESS="$(ip add show eth0 | perl -lne 'if (m#inet ([\d.]+)/(\d+) scope global#) { print $1; exit 0; }')"
   fi
 
+  SHIBD_ATTRIBUTES=" $SHIBD_ATTRIBUTES "
+
   echoerr "SHIBD_SERVER_ADMIN=${SHIBD_SERVER_ADMIN}"
   echoerr "SHIBD_ADDRESS=${SHIBD_ADDRESS}"
   echoerr "SHIBD_ENTITYID=${SHIBD_ENTITYID}"
+  echoerr "SHIBD_ATTRIBUTES=${SHIBD_ATTRIBUTES}"
 
   for tt2_f in /etc/opt/pie/shibboleth/*.tt2; do
     f="$(basename -s .tt2 "$tt2_f")"
@@ -19,6 +22,7 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "shibd_server_admin=${SHIBD_SERVER_ADMIN}" \
       --define "shibd_address=${SHIBD_ADDRESS}" \
       --define "shibd_entityid=${SHIBD_ENTITYID}" \
+      --define "shibd_attributes=${SHIBD_ATTRIBUTES}" \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 

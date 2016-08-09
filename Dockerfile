@@ -1,9 +1,5 @@
 FROM sbutler/pie-base
 
-ENV SHIBD_SERVER_ADMIN  "webmaster@example.org"
-ENV SHIBD_ADDRESS       ""
-ENV SHIBD_ENTITYID      "https://host.name.illinois.edu/shibboleth"
-
 RUN set -xe \
     && apt-get update && apt-get install -y \
         shibboleth-sp2-utils \
@@ -16,6 +12,11 @@ COPY pie-entrypoint.sh /usr/local/bin/
 RUN set -xe \
     && chmod a+rx /usr/local/bin/pie-entrypoint.sh \
     && mkdir -p /var/run/shibboleth
+
+ENV SHIBD_SERVER_ADMIN  "webmaster@example.org"
+ENV SHIBD_ADDRESS       ""
+ENV SHIBD_ENTITYID      "https://host.name.illinois.edu/shibboleth"
+ENV SHIBD_ATTRIBUTES    ""
 
 VOLUME /etc/opt/pie/shibboleth
 VOLUME /etc/shibboleth
