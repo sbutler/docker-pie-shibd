@@ -4,7 +4,7 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
-  <TCPListener address="0.0.0.0" port="1600"/>
+  <TCPListener address="[% shibd_address %]" port="1600" />
 
 	<!--
 	     Put your SP's unique entity ID in the below entityID attribute
@@ -12,7 +12,7 @@
 	     space-separated, in REMOTE_USER. The first attribute in
 	     your list that is sent by the IDP will be used.
 	 -->
-	<ApplicationDefaults entityID="https://host.name.illinois.edu/shibboleth"
+	<ApplicationDefaults entityID="[% shibd_entityid %]"
 	    REMOTE_USER="eppn persistent-id targeted-id">
 		<!--
 		     Lifetime is the max length of a session in seconds.
@@ -37,7 +37,7 @@
 		<!--		     Set the email address that's displayed in error
 		     templates. Also set the help URL.
 		-->
-		<Errors supportContact="someone@somewhere.com"
+		<Errors supportContact="[% shibd_server_admin %]"
 			helpLocation="/about.html"
 			styleSheet="/shibboleth-sp/main.css"/>
 
