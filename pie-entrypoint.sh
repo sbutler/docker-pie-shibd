@@ -4,14 +4,15 @@ set -e
 echoerr () { echo "$@" 1>&2; }
 
 if [[ "$1" == "shibd-pie" ]]; then
-  if [[ -z "$SHIBD_ADDRESS" ]]; then
-    SHIBD_ADDRESS="$(ip add show eth0 | perl -lne 'if (m#inet ([\d.]+)/(\d+) scope global#) { print $1; exit 0; }')"
-  fi
+  local_ipinfo=($(ip add show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+) scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
+  [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
+  [[ -z "$SHIBD_TCPLISTENER_ACL" ]]     && SHIBD_TCPLISTENER_ACL=${local_ipinfo[1]}
 
   SHIBD_ATTRIBUTES=" $SHIBD_ATTRIBUTES "
 
   echoerr "SHIBD_SERVER_ADMIN=${SHIBD_SERVER_ADMIN}"
-  echoerr "SHIBD_ADDRESS=${SHIBD_ADDRESS}"
+  echoerr "SHIBD_TCPLISTENER_ADDRESS=${SHIBD_TCPLISTENER_ADDRESS}"
+  echoerr "SHIBD_TCPLISTENER_ACL=${SHIBD_TCPLISTENER_ACL}"
   echoerr "SHIBD_ENTITYID=${SHIBD_ENTITYID}"
   echoerr "SHIBD_ATTRIBUTES=${SHIBD_ATTRIBUTES}"
 
@@ -20,7 +21,8 @@ if [[ "$1" == "shibd-pie" ]]; then
     echoerr "Processing $tt2_f -> $f..."
     tpage \
       --define "shibd_server_admin=${SHIBD_SERVER_ADMIN}" \
-      --define "shibd_address=${SHIBD_ADDRESS}" \
+      --define "shibd_tcplistener_address=${SHIBD_TCPLISTENER_ADDRESS}" \
+      --define "shibd_tcplistener_acl=${SHIBD_TCPLISTENER_ACL}" \
       --define "shibd_entityid=${SHIBD_ENTITYID}" \
       --define "shibd_attributes=${SHIBD_ATTRIBUTES}" \
       "$tt2_f" > "/etc/shibboleth/$f"
