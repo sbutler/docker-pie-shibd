@@ -24,7 +24,7 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "shibd_tcplistener_address=${SHIBD_TCPLISTENER_ADDRESS}" \
       --define "shibd_tcplistener_acl=${SHIBD_TCPLISTENER_ACL}" \
       --define "shibd_entityid=${SHIBD_ENTITYID}" \
-      --define "shibd_attributes=${SHIBD_ATTRIBUTES}" \
+      --define "shibd_attributes= ${SHIBD_ATTRIBUTES} " \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 
