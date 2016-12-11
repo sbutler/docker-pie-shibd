@@ -8,8 +8,6 @@ if [[ "$1" == "shibd-pie" ]]; then
   [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
   [[ -z "$SHIBD_TCPLISTENER_ACL" ]]     && SHIBD_TCPLISTENER_ACL=${local_ipinfo[1]}
 
-  SHIBD_ATTRIBUTES=" $SHIBD_ATTRIBUTES "
-
   echoerr "SHIBD_SERVER_ADMIN=${SHIBD_SERVER_ADMIN}"
   echoerr "SHIBD_TCPLISTENER_ADDRESS=${SHIBD_TCPLISTENER_ADDRESS}"
   echoerr "SHIBD_TCPLISTENER_ACL=${SHIBD_TCPLISTENER_ACL}"
@@ -24,7 +22,7 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "shibd_tcplistener_address=${SHIBD_TCPLISTENER_ADDRESS}" \
       --define "shibd_tcplistener_acl=${SHIBD_TCPLISTENER_ACL}" \
       --define "shibd_entityid=${SHIBD_ENTITYID}" \
-      --define "shibd_attributes= ${SHIBD_ATTRIBUTES} " \
+      --define "shibd_attributes=${SHIBD_ATTRIBUTES}" \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 
