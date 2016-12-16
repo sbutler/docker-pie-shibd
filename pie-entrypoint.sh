@@ -4,7 +4,7 @@ set -e
 echoerr () { echo "$@" 1>&2; }
 
 if [[ "$1" == "shibd-pie" ]]; then
-  local_ipinfo=($(ip add show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+) scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
+  local_ipinfo=($(ip addr show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+).*scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
   [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
   [[ -z "$SHIBD_TCPLISTENER_ACL" ]]     && SHIBD_TCPLISTENER_ACL=${local_ipinfo[1]}
 
