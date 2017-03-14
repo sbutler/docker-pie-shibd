@@ -50,6 +50,7 @@ ENV SHIBD_TCPLISTENER_ADDRESS ""
 ENV SHIBD_TCPLISTENER_ACL     ""
 ENV SHIBD_ENTITYID            "https://host.name.illinois.edu/shibboleth"
 ENV SHIBD_ATTRIBUTES          ""
+ENV SHIBD_CONFIG_SUFFIX ""
 
 VOLUME /etc/opt/pie/shibboleth
 VOLUME /etc/shibboleth

@@ -48,6 +48,10 @@ if [[ "$1" == "shibd-pie" ]]; then
 
   for tt2_f in /etc/opt/pie/shibboleth/*.tt2; do
     f="$(basename -s .tt2 "$tt2_f")"
+    if [[ "$f" == "shibboleth2.xml" ]]; then
+        f="$f${SHIBD_CONFIG_SUFFIX}"
+    fi
+
     echoerr "Processing $tt2_f -> $f..."
     tpage \
       --define "shibd_server_admin=${SHIBD_SERVER_ADMIN}" \
@@ -59,7 +63,7 @@ if [[ "$1" == "shibd-pie" ]]; then
   done
 
   SHIB_HOME=/usr
-  SHIBSP_CONFIG=/etc/shibboleth/shibboleth2.xml
+  SHIBSP_CONFIG="/etc/shibboleth/shibboleth2.xml${SHIBD_CONFIG_SUFFIX}"
   LD_LIBRARY_PATH=/usr/lib
   PIDFILE=/var/run/shibboleth/shibd.pid
   DAEMON_OPTS="-F"
