@@ -29,10 +29,10 @@ This contains configuration files for shibd in the Template::Toolkit format
 this directory is passed through `tpage` and the result is saved in the
 `/etc/shibboleth/` directory. The image has two files present:
 
-- `shibboleth2.xml`: environment variables passed to the container are used to
+- `shibboleth2.xml.tt2`: environment variables passed to the container are used to
     customize this. It will also contain the IP address and allowed subnet mask
     that tells mod_shib how to connect over TCP.
-- `attribute-map.xml`: environment variables passed to the container enable
+- `attribute-map.xml.tt2`: environment variables passed to the container enable
     common attributes used by the UIUC IdP's. If you only need common attributes
     then you do not need to customize this file. Consider editing the appropriate
     environment variable to enable the right attributes.
