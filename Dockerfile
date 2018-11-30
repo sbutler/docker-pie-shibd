@@ -29,7 +29,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH
 # THE SOFTWARE.
-FROM sbutler/pie-base
+FROM sbutler/pie-base:latest-ubuntu18.04
 
 COPY SWITCHaai-swdistrib.asc /tmp/
 COPY SWITCHaai-swdistrib.list /tmp/
@@ -39,10 +39,9 @@ RUN set -xe \
     && apt-get install -y gnupg --no-install-recommends \
     && apt-key add /tmp/SWITCHaai-swdistrib.asc && rm /tmp/SWITCHaai-swdistrib.asc \
     && mv /tmp/SWITCHaai-swdistrib.list /etc/apt/sources.list.d/ \
-    && apt-get update && apt-get install -y \
+    && apt-get update && apt-get install -y --no-install-recommends \
         libnetaddr-ip-perl \
         shibboleth-sp-utils \
-        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY etc/ /etc
