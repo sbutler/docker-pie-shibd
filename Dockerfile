@@ -31,26 +31,32 @@
 # THE SOFTWARE.
 FROM sbutler/pie-base
 
+COPY SWITCHaai-swdistrib.asc /tmp/
+COPY SWITCHaai-swdistrib.list /tmp/
+
 RUN set -xe \
+    && apt-get update \
+    && apt-get install -y gnupg --no-install-recommends \
+    && apt-key add /tmp/SWITCHaai-swdistrib.asc && rm /tmp/SWITCHaai-swdistrib.asc \
+    && mv /tmp/SWITCHaai-swdistrib.list /etc/apt/sources.list.d/ \
     && apt-get update && apt-get install -y \
         libnetaddr-ip-perl \
-        shibboleth-sp2-utils \
+        shibboleth-sp-utils \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY etc/ /etc
 COPY pie-entrypoint.sh /usr/local/bin/
 
-RUN set -xe \
-    && chmod a+rx /usr/local/bin/pie-entrypoint.sh \
-    && mkdir -p /var/run/shibboleth
+RUN chmod a+rx /usr/local/bin/pie-entrypoint.sh
+RUN mkdir -p /var/run/shibboleth
 
 ENV SHIBD_SERVER_ADMIN        "webmaster@example.org"
 ENV SHIBD_TCPLISTENER_ADDRESS ""
 ENV SHIBD_TCPLISTENER_ACL     ""
 ENV SHIBD_ENTITYID            "https://host.name.illinois.edu/shibboleth"
 ENV SHIBD_ATTRIBUTES          ""
-ENV SHIBD_CONFIG_SUFFIX ""
+ENV SHIBD_CONFIG_SUFFIX       ""
 
 VOLUME /etc/opt/pie/shibboleth
 VOLUME /etc/shibboleth
