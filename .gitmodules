@@ -1,0 +1,3 @@
+[submodule "uiuc-shibplugins"]
+	path = uiuc-shibplugins
+	url = git@github.com:sbutler/uiuc-shibplugins.git
