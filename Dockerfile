@@ -65,6 +65,7 @@ RUN set -xe \
     && apt-key add /tmp/SWITCHaai-swdistrib.asc && rm /tmp/SWITCHaai-swdistrib.asc \
     && mv /tmp/SWITCHaai-swdistrib.list /etc/apt/sources.list.d/ \
     && apt-get update && apt-get install -y --no-install-recommends \
+        iproute2 \
         libcurl4 \
         libnetaddr-ip-perl \
         shibboleth-sp-utils \
