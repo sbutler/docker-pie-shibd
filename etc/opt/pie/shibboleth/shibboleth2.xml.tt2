@@ -5,17 +5,25 @@
     xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
     clockSkew="180">
 
-    [% IF shibd_tcplistener_address && shibd_tcplistener_acl %]
-    <TCPListener address="[% shibd_tcplistener_address %]" port="1600" acl="[% shibd_tcplistener_acl %]" />
-    [% END %]
-
     <!-- The OutOfProcess section contains properties affecting the shibd daemon. -->
-    <OutOfProcess logger="shibd.logger" tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a">
+    <OutOfProcess>
         <Extensions>
             <Library path="plugins.so" fatal="true"/>
             <Library path="/usr/local/lib/libuiuc-shibplugins.so" fatal="true"/>
         </Extensions>
     </OutOfProcess>
+
+    [% IF shibd_tcplistener_address && shibd_tcplistener_acl %]
+    <TCPListener address="[% shibd_tcplistener_address %]" port="1600" acl="[% shibd_tcplistener_acl %]" />
+    [% END %]
+
+    [% IF store_dynamodb_table && (store_dynamodb_endpoint || store_dynamodb_region) %]
+    <StorageService type="UIUC-DYNAMODB" id="dynamodb"
+        tableName="[% store_dynamodb_table %]"
+        [% IF store_dynamodb_region %]region="[% store_dynamodb_region %]"[% ELSIF store_dynamodb_endpoint %]endpoint="[% store_dynamodb_endpoint %]"[% END %]
+        >
+    </StorageService>
+    [% END %]
 
     <!--
          Put your SP's unique entity ID in the below entityID attribute
@@ -24,7 +32,9 @@
          your list that is sent by the IDP will be used.
      -->
     <ApplicationDefaults entityID="[% shibd_entityid %]"
-        REMOTE_USER="eppn persistent-id targeted-id">
+        REMOTE_USER="eppn persistent-id targeted-id"
+        signing="true"
+        >
         <!--
              Lifetime is the max length of a session in seconds.
              Timeout is the inactivity time-out in seconds.

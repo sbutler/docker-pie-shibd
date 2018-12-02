@@ -36,15 +36,23 @@ set -e
 echoerr () { echo "$@" 1>&2; }
 
 if [[ "$1" == "shibd-pie" ]]; then
-  local_ipinfo=($(ip addr show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+).*scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
-  [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
-  [[ -z "$SHIBD_TCPLISTENER_ACL" ]]     && SHIBD_TCPLISTENER_ACL=${local_ipinfo[1]}
+  if [[ $SHIBD_LISTENER == "tcp" ]]; then
+    local_ipinfo=($(ip addr show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+).*scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
+    [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
+    [[ -z "$SHIBD_TCPLISTENER_ACL" ]]     && SHIBD_TCPLISTENER_ACL=${local_ipinfo[1]}
+  fi
 
   echoerr "SHIBD_SERVER_ADMIN=${SHIBD_SERVER_ADMIN}"
   echoerr "SHIBD_TCPLISTENER_ADDRESS=${SHIBD_TCPLISTENER_ADDRESS}"
   echoerr "SHIBD_TCPLISTENER_ACL=${SHIBD_TCPLISTENER_ACL}"
   echoerr "SHIBD_ENTITYID=${SHIBD_ENTITYID}"
   echoerr "SHIBD_ATTRIBUTES=${SHIBD_ATTRIBUTES}"
+  echoerr "SHIBD_STORE_DYNAMODB_TABLE=${SHIBD_STORE_DYNAMODB_TABLE}"
+  echoerr "SHIBD_STORE_DYNAMODB_REGION=${SHIBD_STORE_DYNAMODB_REGION}"
+  echoerr "SHIBD_STORE_DYNAMODB_ENDPOINT=${SHIBD_STORE_DYNAMODB_ENDPOINT}"
+
+  echoerr "Initializing /etc/shibboleth"
+  cp -van /etc/shibboleth-dist/* /etc/shibboleth/ 1>&2
 
   for tt2_f in /etc/opt/pie/shibboleth/*.tt2; do
     f="$(basename -s .tt2 "$tt2_f")"
@@ -59,6 +67,9 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "shibd_tcplistener_acl=${SHIBD_TCPLISTENER_ACL}" \
       --define "shibd_entityid=${SHIBD_ENTITYID}" \
       --define "shibd_attributes=${SHIBD_ATTRIBUTES}" \
+      --define "store_dynamodb_table=${SHIBD_STORE_DYNAMODB_TABLE}" \
+      --define "store_dynamodb_region=${SHIBD_STORE_DYNAMODB_REGION}" \
+      --define "store_dynamodb_endpoint=${SHIBD_STORE_DYNAMODB_ENDPOINT}" \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 

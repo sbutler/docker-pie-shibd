@@ -78,12 +78,19 @@ COPY --from=uiuc-shibplugins /output/lib/libuiuc-shibplugins.so /usr/local/lib
 RUN chmod a+rx /usr/local/bin/pie-entrypoint.sh
 RUN mkdir -p /var/run/shibboleth
 
+RUN cp -av /etc/shibboleth /etc/shibboleth-dist
+
 ENV SHIBD_SERVER_ADMIN="webmaster@example.org" \
+    SHIBD_LISTENER="" \
     SHIBD_TCPLISTENER_ADDRESS="" \
     SHIBD_TCPLISTENER_ACL="" \
     SHIBD_ENTITYID="https://host.name.illinois.edu/shibboleth" \
     SHIBD_ATTRIBUTES="" \
     SHIBD_CONFIG_SUFFIX=""
+
+ENV SHIBD_STORE_DYNAMODB_TABLE="" \
+    SHIBD_STORE_DYNAMODB_REGION="" \
+    SHIBD_STORE_DYNAMODB_ENDPOINT=""
 
 VOLUME /etc/shibboleth /etc/opt/pie/shibboleth
 VOLUME /run/shibboleth

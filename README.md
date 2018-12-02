@@ -55,6 +55,11 @@ with minimum effort for deployments.
 Email address of the Shibboleth SP administrator for the services on this
 server.
 
+### SHIBD_LISTENER
+
+Either "tcp" or "" (to use the default for your platform). Setting this
+adds a Listener block to the configuration.
+
 ### SHIBD_TCPLISTENER_ADDRESS
 
 IP address that mod_shib should use to connect to the shibd process. If you
@@ -126,6 +131,27 @@ allows you to do Green-Blue deployments from the same, shared `/etc/shibboleth/`
 directory without overwriting already running SP's.
 
 Do not enable this option unless you know you require it.
+
+### SHIBD_STORE_DYNAMODB_TABLE
+
+Name of a table in DynamoDB to use for storing session information. The
+table needs this setup:
+
+- Range key: Context (string)
+- Sort key: Key (string)
+- TTL attribute: Expires
+
+### SHIBD_STORE_DYNAMODB_REGION
+
+Name of the AWS region where the table is located (us-east-1, us-east-2,
+etc). Specifying either this value or the endpoint is required if you
+will be using DynamoDB storage.
+
+### SHIBD_STORE_DYNAMODB_ENDPOINT
+
+Name of the AWS DynamoDB endpoint to use for the service. Specifying
+either this value or the region is required if you will be using DynamoDB
+storage.
 
 Running
 -------
