@@ -2,7 +2,7 @@
 #
 # Debian: remove warn_log.  All logs go to syslog, so there's no need to
 # have multiple log destinations differentiated only by log threshold.
-#log4j.rootCategory=INFO, native_log, warn_log
+#log4j.rootCategory=INFO, native_log
 log4j.rootCategory=INFO, native_log
 
 # fairly verbose for DEBUG, so generally leave at INFO
