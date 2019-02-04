@@ -48,7 +48,13 @@ log4j.category.XMLTooling.libcurl=ERROR
 #log4j.appender.warn_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
 #log4j.appender.warn_log.threshold=WARN
 
+[% IF shibd_logging == 'file' %]
+log4j.appender.native_log=org.apache.log4j.RollingFileAppender
+log4j.appender.native_log.maxFileSize=10240000
+log4j.appender.native_log.maxBackupIndex=10
+[% ELSE %]
 log4j.appender.native_log=org.apache.log4j.FileAppender
+[% END %]
 log4j.appender.native_log.fileName=/var/log/shibboleth-www/native.log
 log4j.appender.native_log.layout=org.apache.log4j.PatternLayout
 log4j.appender.native_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n

@@ -40,12 +40,15 @@ shib_loginit () {
     case "$SHIBD_LOGGING" in
       pipe)
         [[ -e $f ]] && rm -- "$f"
-        mkfifo -m 0600 "$f"
+        mkfifo -m 0640 "$f"
         chown _shibd:_shibd "$f"
         ;;
 
       file)
-        [[ ! -f $f ]] && rm -- "$f"
+        [[ -e $f && ! -f $f ]] && rm -- "$f"
+        touch "$f"
+        chmod 0640 "$f"
+        chown _shibd:_shibd "$f"
         ;;
 
       *)
@@ -72,6 +75,7 @@ if [[ "$1" == "shibd-pie" ]]; then
   echoerr "SHIBD_STORE_DYNAMODB_TABLE=${SHIBD_STORE_DYNAMODB_TABLE}"
   echoerr "SHIBD_STORE_DYNAMODB_REGION=${SHIBD_STORE_DYNAMODB_REGION}"
   echoerr "SHIBD_STORE_DYNAMODB_ENDPOINT=${SHIBD_STORE_DYNAMODB_ENDPOINT}"
+  echoerr "SHIBD_LOGGING=${SHIBD_LOGGING}"
 
   echoerr "Initializing /etc/shibboleth"
   cp -van /etc/shibboleth-dist/* /etc/shibboleth/ 1>&2
@@ -92,6 +96,7 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "store_dynamodb_table=${SHIBD_STORE_DYNAMODB_TABLE}" \
       --define "store_dynamodb_region=${SHIBD_STORE_DYNAMODB_REGION}" \
       --define "store_dynamodb_endpoint=${SHIBD_STORE_DYNAMODB_ENDPOINT}" \
+      --define "shibd_logging=${SHIBD_LOGGING}" \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 
