@@ -35,7 +35,29 @@ set -e
 
 echoerr () { echo "$@" 1>&2; }
 
+shib_loginit () {
+  for f in /var/log/shibboleth/{transaction,signature}.log; do
+    case "$SHIBD_LOGGING" in
+      pipe)
+        [[ -e $f ]] && rm -- "$f"
+        mkfifo -m 0600 "$f"
+        chown _shibd:_shibd "$f"
+        ;;
+
+      file)
+        [[ ! -f $f ]] && rm -- "$f"
+        ;;
+
+      *)
+        [[ -e $f ]] && rm -- "$f"
+        ln -s /proc/self/fd/2 "$f"
+        ;;
+    esac
+  done
+}
+
 if [[ "$1" == "shibd-pie" ]]; then
+  shib_loginit
   if [[ $SHIBD_LISTENER == "tcp" ]]; then
     local_ipinfo=($(ip addr show eth0 | perl -MNetAddr::IP -lne 'if (m#inet ([\d.]+/\d+).*scope global#) { my $n = NetAddr::IP->new($1); printf "%s %s", $n->addr, $n->network; exit 0; }'))
     [[ -z "$SHIBD_TCPLISTENER_ADDRESS" ]] && SHIBD_TCPLISTENER_ADDRESS=${local_ipinfo[0]}
@@ -92,6 +114,9 @@ if [[ "$1" == "shibd-pie" ]]; then
 
   rm -f "$PIDFILE"
   exec shibd $DAEMON_OPTS "$@"
+elif [[ "$1" == "shibd" ]]; then
+  shibd_loginit
+  exec shibd "$@"
 else
   exec "$@"
 fi

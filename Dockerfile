@@ -69,7 +69,9 @@ RUN set -xe \
         libcurl4 \
         libnetaddr-ip-perl \
         shibboleth-sp-utils \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/log/shibboleth/*
+
 
 COPY etc/ /etc
 COPY pie-entrypoint.sh /usr/local/bin/
@@ -86,7 +88,8 @@ ENV SHIBD_SERVER_ADMIN="webmaster@example.org" \
     SHIBD_TCPLISTENER_ACL="" \
     SHIBD_ENTITYID="https://host.name.illinois.edu/shibboleth" \
     SHIBD_ATTRIBUTES="" \
-    SHIBD_CONFIG_SUFFIX=""
+    SHIBD_CONFIG_SUFFIX="" \
+    SHIBD_LOGGING=""
 
 ENV SHIBD_STORE_DYNAMODB_TABLE="" \
     SHIBD_STORE_DYNAMODB_REGION="" \
@@ -94,6 +97,7 @@ ENV SHIBD_STORE_DYNAMODB_TABLE="" \
 
 VOLUME /etc/shibboleth /etc/opt/pie/shibboleth
 VOLUME /run/shibboleth
+VOLUME /var/log/shibboleth
 
 EXPOSE 1600
 
