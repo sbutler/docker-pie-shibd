@@ -39,8 +39,13 @@ shib_loginit () {
   for f in /var/log/shibboleth/{transaction,signature}.log; do
     case "$SHIBD_LOGGING" in
       pipe)
-        [[ -e $f ]] && rm -- "$f"
-        mkfifo -m 0640 "$f"
+        [[ -e $f && ! -p $f ]] && rm -- "$f"
+
+        if [[ ! -e $f ]]; then
+            mkfifo -m 0640 "$f"
+        else
+            chmod 0640 "$f"
+        fi
         chown _shibd:_shibd "$f"
         ;;
 
@@ -52,8 +57,11 @@ shib_loginit () {
         ;;
 
       *)
-        [[ -e $f ]] && rm -- "$f"
-        ln -s /proc/self/fd/2 "$f"
+        [[ -e $f && ! -L $f ]] && rm -- "$f"
+
+        if [[ ! -e $f ]]; then
+            ln -s /proc/self/fd/2 "$f"
+        fi
         ;;
     esac
   done
