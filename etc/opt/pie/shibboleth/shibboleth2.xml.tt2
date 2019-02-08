@@ -17,7 +17,10 @@
     <TCPListener address="[% shibd_tcplistener_address %]" port="1600" acl="[% shibd_tcplistener_acl %]" />
     [% END %]
 
+    [% ss_primary = 'mem' %]
+    <StorageService type="Memory" id="mem"/>
     [% IF store_dynamodb_table && (store_dynamodb_endpoint || store_dynamodb_region) %]
+    [% ss_primary = 'dynamodb' %]
     <StorageService type="UIUC-DYNAMODB" id="dynamodb"
         tableName="[% store_dynamodb_table %]"
         [% IF store_dynamodb_region %]region="[% store_dynamodb_region %]"[% ELSIF store_dynamodb_endpoint %]endpoint="[% store_dynamodb_endpoint %]"[% END %]
@@ -25,6 +28,8 @@
     </StorageService>
     [% END %]
 
+    <SessionCache type="StorageService" StorageService="[% ss_primary %]"/>
+    <ReplayCache StorageService="[% ss_primary %]"/>
     <!--
          Put your SP's unique entity ID in the below entityID attribute
          Optional: set attributes you want assigned to remote_user,
@@ -39,7 +44,7 @@
              Lifetime is the max length of a session in seconds.
              Timeout is the inactivity time-out in seconds.
         -->
-        <Sessions lifetime="28800" timeout="3600" relayState="ss:mem"
+        <Sessions lifetime="28800" timeout="3600" relayState="ss:[% ss_primary %]"
             checkAddress="false" handlerSSL="true" cookieProps="https">
             <!--
              Below setting will use Urbana campus
@@ -47,7 +52,7 @@
             -->
             <SSO entityID="urn:mace:incommon:uiuc.edu">
                  SAML2
-             </SSO>
+            </SSO>
 
             <Logout>SAML2 Local</Logout>
             <!-- Administrative logout. -->
