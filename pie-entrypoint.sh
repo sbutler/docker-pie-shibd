@@ -36,6 +36,11 @@ set -e
 echoerr () { echo "$@" 1>&2; }
 
 shib_loginit () {
+  echoerr "SHIBD_LOGGING=${SHIBD_LOGGING}"
+
+  chown _shibd:_shibd /var/log/shibboleth
+  chmod 0750 /var/log/shibboleth
+
   for f in /var/log/shibboleth/{transaction,signature}.log; do
     case "$SHIBD_LOGGING" in
       pipe)
@@ -83,7 +88,6 @@ if [[ "$1" == "shibd-pie" ]]; then
   echoerr "SHIBD_STORE_DYNAMODB_TABLE=${SHIBD_STORE_DYNAMODB_TABLE}"
   echoerr "SHIBD_STORE_DYNAMODB_REGION=${SHIBD_STORE_DYNAMODB_REGION}"
   echoerr "SHIBD_STORE_DYNAMODB_ENDPOINT=${SHIBD_STORE_DYNAMODB_ENDPOINT}"
-  echoerr "SHIBD_LOGGING=${SHIBD_LOGGING}"
 
   echoerr "Initializing /etc/shibboleth"
   cp -van /etc/shibboleth-dist/* /etc/shibboleth/ 1>&2
