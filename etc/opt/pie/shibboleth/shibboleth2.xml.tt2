@@ -21,7 +21,7 @@
     <StorageService type="Memory" id="mem"/>
     [% IF store_dynamodb_table && (store_dynamodb_endpoint || store_dynamodb_region) %]
     [% ss_primary = 'dynamodb' %]
-    <StorageService type="UIUC-DYNAMODB" id="dynamodb"
+    <StorageService type="UIUC-DynamoDB" id="dynamodb"
         tableName="[% store_dynamodb_table %]"
         [% IF store_dynamodb_region %]region="[% store_dynamodb_region %]"[% ELSIF store_dynamodb_endpoint %]endpoint="[% store_dynamodb_endpoint %]"[% END %]
         >
