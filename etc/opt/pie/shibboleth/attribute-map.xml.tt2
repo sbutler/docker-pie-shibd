@@ -111,6 +111,9 @@
     [% IF shibd_attributes.match( '(?i)(^|\s)member(\s|$)' ) %]
       <!-- isMemberOf -->
       <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.5.1.1" id="member"/>
+    [% ELSIF shibd_attributes.match( '(?i)(^|\s)isMemberOf(\s|$)' ) %]
+      <!-- isMemberOf -->
+      <Attribute name="urn:oid:1.3.6.1.4.1.5923.1.5.1.1" id="isMemberOf"/>
     [% END %]
 
     [% IF shibd_attributes.match( '(?i)(^|\s)o(\s|$)' ) %]
