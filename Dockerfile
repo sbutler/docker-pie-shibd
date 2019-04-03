@@ -89,7 +89,9 @@ ENV SHIBD_SERVER_ADMIN="webmaster@example.org" \
     SHIBD_ENTITYID="https://host.name.illinois.edu/shibboleth" \
     SHIBD_ATTRIBUTES="" \
     SHIBD_CONFIG_SUFFIX="" \
-    SHIBD_LOGGING=""
+    SHIBD_LOGGING="" \
+    SHIBD_SP_KEY="sp-key.pem" \
+    SHIBD_SP_CERT="sp-cert.pem"
 
 ENV SHIBD_STORE_DYNAMODB_TABLE="" \
     SHIBD_STORE_DYNAMODB_REGION="" \

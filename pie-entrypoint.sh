@@ -88,6 +88,8 @@ if [[ "$1" == "shibd-pie" ]]; then
   echoerr "SHIBD_STORE_DYNAMODB_TABLE=${SHIBD_STORE_DYNAMODB_TABLE}"
   echoerr "SHIBD_STORE_DYNAMODB_REGION=${SHIBD_STORE_DYNAMODB_REGION}"
   echoerr "SHIBD_STORE_DYNAMODB_ENDPOINT=${SHIBD_STORE_DYNAMODB_ENDPOINT}"
+  echoerr "SHIBD_SP_KEY=${SHIBD_SP_KEY}"
+  echoerr "SHIBD_SP_CERT=${SHIBD_SP_CERT}"
 
   echoerr "Initializing /etc/shibboleth"
   cp -van /etc/shibboleth-dist/* /etc/shibboleth/ 1>&2
@@ -109,6 +111,8 @@ if [[ "$1" == "shibd-pie" ]]; then
       --define "store_dynamodb_region=${SHIBD_STORE_DYNAMODB_REGION}" \
       --define "store_dynamodb_endpoint=${SHIBD_STORE_DYNAMODB_ENDPOINT}" \
       --define "shibd_logging=${SHIBD_LOGGING}" \
+      --define "shibd_sp_key=${SHIBD_SP_KEY}" \
+      --define "shibd_sp_cert=${SHIBD_SP_CERT}" \
       "$tt2_f" > "/etc/shibboleth/$f"
   done
 
