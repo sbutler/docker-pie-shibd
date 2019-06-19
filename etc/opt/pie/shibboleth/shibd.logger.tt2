@@ -55,7 +55,7 @@ log4j.appender.tran_log=org.apache.log4j.FileAppender
 [% END %]
 log4j.appender.tran_log.fileName=/var/log/shibboleth/transaction.log
 log4j.appender.tran_log.layout=org.apache.log4j.PatternLayout
-log4j.appender.tran_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S} %p %c %x: %m%n
+log4j.appender.tran_log.layout.ConversionPattern=%d{%Y-%m-%d %H:%M:%S}|%c|%m%n
 
 [% IF shibd_logging == 'file' %]
 log4j.appender.sig_log=org.apache.log4j.RollingFileAppender
