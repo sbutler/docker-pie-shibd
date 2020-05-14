@@ -57,8 +57,11 @@ server.
 
 ### SHIBD_LISTENER
 
-Either "tcp" or "" (to use the default for your platform). Setting this
+Either "tcp", "awsvpc", or "" (to use the default for your platform). Setting this
 adds a Listener block to the configuration.
+
+The "awsvpc" mode is useful for detecting your address inside tasks using the
+"awsvpc" networking mode.
 
 ### SHIBD_TCPLISTENER_ADDRESS
 
