@@ -1,4 +1,5 @@
-<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
+<SPConfig xmlns="urn:mace:shibboleth:3.0:native:sp:config"
+
     xmlns:conf="urn:mace:shibboleth:3.0:native:sp:config"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
@@ -54,7 +55,8 @@
                  SAML2
             </SSO>
 
-            <Logout>SAML2 Local</Logout>
+            <Logout>SAML2 Local</Logout>
+
             <!-- Administrative logout. -->
             <Handler type="MetadataGenerator" Location="/Metadata" signing="false"/>
             <Handler type="Status" Location="/Status" acl="127.0.0.1 ::1"/>
@@ -62,7 +64,8 @@
             <Handler type="DiscoveryFeed" Location="/DiscoFeed"/>
         </Sessions>
 
-        <!--             Set the email address that's displayed in error
+        <!--
+             Set the email address that's displayed in error
              templates. Also set the help URL.
         -->
         <Errors supportContact="[% shibd_server_admin %]"
@@ -81,12 +84,26 @@
             </MetadataFilter>
         </MetadataProvider>
 
-        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+        <AttributeExtractor type="XML" validate="true" reloadChanges="false" path="attribute-map.xml"/>
+
         <AttributeResolver type="Query" subjectMatch="true"/>
+        [% IF shibd_attributes.match( '(?i)(^|\s)member(\s|$)' ) %]
+            <AttributeResolver type="Transform" source="member">
+                <Regex match="^urn:mace:uiuc.edu:(.+:)?([^:]+)$" dest="uiucMember">$2</Regex>
+            </AttributeResolver>
+        [% ELSIF shibd_attributes.match( '(?i)(^|\s)isMemberOf(\s|$)' ) %]
+            <AttributeResolver type="Transform" source="isMemberOf">
+                <Regex match="^urn:mace:uiuc.edu:(.+:)?([^:]+)$" dest="isUIUCMemberOf">$2</Regex>
+            </AttributeResolver>
+        [% END %]
+
         <AttributeFilter type="XML" validate="true" path="attribute-policy.xml"/>
+
         <CredentialResolver type="File" key="[% shibd_sp_key %]" certificate="[% shibd_sp_cert %]"/>
     </ApplicationDefaults>
 
-    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
-    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+    <SecurityPolicyProvider type="XML" validate="true" path="security-policy.xml"/>
+
+    <ProtocolProvider type="XML" validate="true" reloadChanges="false" path="protocols.xml"/>
+
 </SPConfig>
