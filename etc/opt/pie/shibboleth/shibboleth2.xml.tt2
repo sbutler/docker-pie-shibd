@@ -74,7 +74,7 @@
 
         <!-- Configuration to consume I-Trust metadata. -->
         <MetadataProvider type="XML"
-            url="https://discovery.itrust.illinois.edu/itrust-metadata/itrust-metadata.xml"
+            url="https://md.itrust.illinois.edu/itrust-metadata/itrust-metadata.xml"
             backingFilePath="itrust-metadata.xml" reloadInterval="7200">
             <MetadataFilter type="RequireValidUntil" maxValidityInterval="2419200"/>
             <MetadataFilter type="Signature" certificate="itrust.pem"/>
