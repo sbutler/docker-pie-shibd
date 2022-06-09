@@ -10,7 +10,6 @@
     <OutOfProcess tranLogFormat="%u|%s|%IDP|%i|%ac|%t|%attr|%n|%b|%E|%S|%SS|%L|%UA|%a">
         <Extensions>
             <Library path="plugins.so" fatal="true"/>
-            <Library path="/usr/local/lib/libuiuc-shibplugins.so" fatal="true"/>
         </Extensions>
     </OutOfProcess>
 
@@ -20,14 +19,6 @@
 
     [% ss_primary = 'mem' %]
     <StorageService type="Memory" id="mem"/>
-    [% IF store_dynamodb_table && (store_dynamodb_endpoint || store_dynamodb_region) %]
-    [% ss_primary = 'dynamodb' %]
-    <StorageService type="UIUC-DynamoDB" id="dynamodb"
-        tableName="[% store_dynamodb_table %]"
-        [% IF store_dynamodb_region %]region="[% store_dynamodb_region %]"[% ELSIF store_dynamodb_endpoint %]endpoint="[% store_dynamodb_endpoint %]"[% END %]
-        >
-    </StorageService>
-    [% END %]
 
     <SessionCache type="StorageService" StorageService="[% ss_primary %]"/>
     <ReplayCache StorageService="[% ss_primary %]"/>
