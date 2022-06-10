@@ -35,7 +35,8 @@ image-build:
 image-push-latest:
 	@:$(call check_defined, REPO_URI, Repository URI)
 	for _repo in "$(REPO_URI)" "$(REPO_URI_BAK)"; do \
-		[ -n $$_repo ] || continue; \
+		[ -n "$$_repo" ] || continue; \
+		docker tag $(REPO_NAME):latest $$_repo:latest; \
 		docker push $$_repo:latest; \
 		sleep 10; \
 		for _tag in "commit-$(COMMIT_ID)" latest-ubuntu latest-ubuntu22.04; do \
@@ -45,10 +46,20 @@ image-push-latest:
 		done; \
 	done
 
+image-push:
+	@:$(call check_defined, REPO_URI, Repository URI)
+	@:$(call check_defined, IMAGE_TAG, Image Tag)
+	for _repo in "$(REPO_URI)" "$(REPO_URI_BAK)"; do \
+		[ -n "$$_repo" ] || continue; \
+		docker tag $(REPO_NAME):latest $$_repo:$(IMAGE_TAG); \
+		docker push $$_repo:$(IMAGE_TAG); \
+		sleep 10; \
+	done
+
 image-push-dev:
 	@:$(call check_defined, REPO_URI, Repository URI)
 	for _repo in "$(REPO_URI)" "$(REPO_URI_BAK)"; do \
-		[ -n $$_repo ] || continue; \
+		[ -n "$$_repo" ] || continue; \
 		docker tag $(REPO_NAME):latest $$_repo:dev; \
 		docker push $$_repo:dev; \
 		sleep 10; \
@@ -57,7 +68,7 @@ image-push-dev:
 image-push-test:
 	@:$(call check_defined, REPO_URI, Repository URI)
 	for _repo in "$(REPO_URI)" "$(REPO_URI_BAK)"; do \
-		[ -n $$_repo ] || continue; \
+		[ -n "$$_repo" ] || continue; \
 		docker tag $(REPO_NAME):latest $$_repo:test; \
 		docker push $$_repo:test; \
 		sleep 10; \
@@ -66,7 +77,7 @@ image-push-test:
 image-push-prod:
 	@:$(call check_defined, REPO_URI, Repository URI)
 	for _repo in "$(REPO_URI)" "$(REPO_URI_BAK)"; do \
-		[ -n $$_repo ] || continue; \
+		[ -n "$$_repo" ] || continue; \
 		docker tag $(REPO_NAME):latest $$_repo:prod; \
 		docker push $$_repo:prod; \
 		sleep 10; \
