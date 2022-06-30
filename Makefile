@@ -27,7 +27,7 @@ ecr-login:
 image-build:
 	[ -e "$(DISTDIR)" ] || mkdir -p "$(DISTDIR)"
 	docker pull public.ecr.aws/lts/ubuntu:22.04
-	docker build -t $(REPO_NAME):latest --iidfile "$(DISTDIR)/config.image-id" .
+	docker build -t $(REPO_NAME):latest --iidfile "$(DISTDIR)/pie-shibd.image-id" .
 	for _tag in "commit-$(COMMIT_ID)" latest-ubuntu latest-ubuntu22.04; do \
 		docker tag $(REPO_NAME):latest $(REPO_NAME):$$_tag; \
 	done
